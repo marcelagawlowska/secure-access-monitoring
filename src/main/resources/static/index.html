@@ -1,0 +1,965 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Marcela's project</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap');
+
+        :root {
+            --bg: #1e3a5f;
+            --bg-deep: #274b78;
+            --panel: rgba(255, 255, 255, 0.86);
+            --panel-strong: #ffffff;
+            --ink: #10233d;
+            --muted: #52708f;
+            --line: rgba(110, 162, 214, 0.28);
+            --accent: #1d6fd7;
+            --accent-strong: #1359b4;
+            --danger: #cb2f5a;
+            --success: #117a65;
+            --shadow: 0 14px 36px rgba(31, 85, 150, 0.12);
+            --radius: 18px;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: "Manrope", "Segoe UI", sans-serif;
+            color: var(--ink);
+            background:
+                radial-gradient(circle at 12% 10%, rgba(163, 208, 255, 0.18), transparent 18%),
+                radial-gradient(circle at 82% 18%, rgba(118, 177, 255, 0.14), transparent 16%),
+                radial-gradient(circle at 76% 72%, rgba(71, 129, 214, 0.18), transparent 20%),
+                radial-gradient(circle at 24% 86%, rgba(90, 150, 230, 0.12), transparent 18%),
+                linear-gradient(145deg, #17304e, #20446d 44%, #2b5a8b);
+        }
+
+        .page {
+            width: min(1200px, calc(100% - 32px));
+            margin: 28px auto 44px;
+        }
+
+        .hero {
+            position: relative;
+            overflow: hidden;
+            padding: 28px;
+            border-radius: 24px;
+            border: 1px solid var(--line);
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.94), rgba(233, 245, 255, 0.86));
+            box-shadow: var(--shadow);
+        }
+
+        .hero::after {
+            content: "";
+            position: absolute;
+            inset: auto -40px -70px auto;
+            width: 180px;
+            height: 180px;
+            background: radial-gradient(circle, rgba(29, 111, 215, 0.16), transparent 70%);
+            pointer-events: none;
+        }
+
+        .eyebrow {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 14px;
+            border-radius: 999px;
+            background: rgba(29, 111, 215, 0.1);
+            color: var(--accent-strong);
+            font-size: 0.9rem;
+            font-weight: 700;
+            letter-spacing: 0.02em;
+            text-transform: uppercase;
+        }
+
+        h1, h2, h3 {
+            margin: 0;
+        }
+
+        h1 {
+            margin-top: 16px;
+            font-size: clamp(2.3rem, 5vw, 4rem);
+            line-height: 0.95;
+            max-width: 760px;
+        }
+
+        .hero p {
+            margin-top: 16px;
+            max-width: 720px;
+            color: var(--muted);
+            font-size: 1.03rem;
+            line-height: 1.7;
+        }
+
+        .actions {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-top: 22px;
+        }
+
+        .hero-session {
+            margin-top: 14px;
+            color: #31557f;
+            font-size: 0.95rem;
+            font-weight: 600;
+        }
+
+        .section {
+            margin-top: 22px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 18px;
+        }
+
+        .stack {
+            display: grid;
+            gap: 18px;
+        }
+
+        .grid.loose {
+            grid-template-columns: 1.1fr 0.9fr;
+            align-items: start;
+        }
+
+        .side-stack {
+            display: grid;
+            gap: 14px;
+        }
+
+        .card {
+            padding: 22px;
+            border-radius: var(--radius);
+            background: var(--panel);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--line);
+            box-shadow: 0 10px 26px rgba(16, 35, 61, 0.08);
+        }
+
+        .card h2 {
+            font-size: 1.15rem;
+            margin-bottom: 8px;
+        }
+
+        .card p {
+            margin: 0;
+            color: var(--muted);
+            line-height: 1.6;
+            font-size: 0.95rem;
+        }
+
+        .flow-card {
+            padding: 26px;
+        }
+
+        .flow-head {
+            display: grid;
+            grid-template-columns: 160px 1fr;
+            gap: 18px;
+            align-items: start;
+            margin-bottom: 18px;
+        }
+
+        .flow-tag {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 68px;
+            padding: 16px;
+            border-radius: 16px;
+            background: rgba(29, 111, 215, 0.1);
+            color: var(--accent-strong);
+            font-weight: 800;
+            font-size: 0.92rem;
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+            text-align: center;
+        }
+
+        .flow-copy h2 {
+            margin-bottom: 8px;
+            font-size: 1.3rem;
+        }
+
+        .flow-copy p {
+            font-size: 0.97rem;
+        }
+
+        .flow-note {
+            margin-top: 12px;
+            padding: 14px 16px;
+            border-radius: 16px;
+            background: rgba(207, 228, 255, 0.48);
+            color: #32557f;
+            line-height: 1.65;
+            font-size: 0.94rem;
+        }
+
+        .inline-value {
+            color: var(--ink);
+            font-weight: 800;
+        }
+
+        .flow-form {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(220px, 1fr));
+            gap: 14px 18px;
+            align-items: end;
+        }
+
+        .field.full {
+            grid-column: 1 / -1;
+        }
+
+        .field-actions {
+            grid-column: 1 / -1;
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .scenario {
+            display: grid;
+            gap: 12px;
+        }
+
+        .scenario-card {
+            padding: 18px;
+            border-radius: 16px;
+            background: rgba(255, 255, 255, 0.92);
+            border: 1px solid var(--line);
+        }
+
+        .scenario-card h3 {
+            font-size: 1rem;
+            margin-bottom: 6px;
+        }
+
+        .scenario-card p {
+            margin-bottom: 12px;
+        }
+
+        label {
+            display: block;
+            margin: 12px 0 6px;
+            font-size: 0.92rem;
+            font-weight: 600;
+        }
+
+        input {
+            width: 100%;
+            padding: 11px 12px;
+            border: 1px solid rgba(110, 162, 214, 0.45);
+            border-radius: 14px;
+            background: rgba(255, 255, 255, 0.92);
+            color: var(--ink);
+            font: inherit;
+            outline: none;
+        }
+
+        input:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 4px rgba(29, 111, 215, 0.12);
+        }
+
+        select {
+            width: 100%;
+            padding: 11px 12px;
+            border: 1px solid rgba(110, 162, 214, 0.45);
+            border-radius: 14px;
+            background: rgba(255, 255, 255, 0.92);
+            color: var(--ink);
+            font: inherit;
+            outline: none;
+        }
+
+        select:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 4px rgba(29, 111, 215, 0.12);
+        }
+
+        button {
+            appearance: none;
+            border: 0;
+            border-radius: 14px;
+            padding: 12px 16px;
+            background: linear-gradient(135deg, var(--accent), var(--accent-strong));
+            color: white;
+            font: inherit;
+            font-weight: 700;
+            cursor: pointer;
+            transition: transform 0.15s ease, box-shadow 0.15s ease;
+            box-shadow: 0 10px 22px rgba(29, 111, 215, 0.24);
+        }
+
+        button:hover {
+            transform: translateY(-1px);
+        }
+
+        .secondary {
+            background: linear-gradient(135deg, #466a96, #2f527d);
+            box-shadow: 0 10px 22px rgba(47, 82, 125, 0.22);
+        }
+
+        .outline {
+            background: transparent;
+            color: var(--accent-strong);
+            border: 1px solid rgba(29, 111, 215, 0.35);
+            box-shadow: none;
+        }
+
+        .outline:hover {
+            background: rgba(29, 111, 215, 0.06);
+        }
+
+        .soft {
+            background: rgba(29, 111, 215, 0.1);
+            color: #184a89;
+            box-shadow: none;
+        }
+
+        .soft:hover {
+            background: rgba(29, 111, 215, 0.16);
+        }
+
+        .danger-soft {
+            background: rgba(203, 47, 90, 0.12);
+            color: #a61f49;
+            box-shadow: none;
+        }
+
+        .danger-soft:hover {
+            background: rgba(203, 47, 90, 0.18);
+        }
+
+        .plain-link {
+            background: transparent;
+            color: #315b8f;
+            box-shadow: none;
+            padding-left: 0;
+            padding-right: 0;
+            border-radius: 0;
+            font-weight: 600;
+        }
+
+        .plain-link:hover {
+            transform: none;
+            color: #1f4c84;
+            text-decoration: underline;
+        }
+
+        .status {
+            margin-top: 12px;
+            min-height: 22px;
+            color: var(--success);
+            font-size: 0.95rem;
+            font-weight: 600;
+        }
+
+        .error {
+            color: var(--danger);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 14px;
+            overflow: hidden;
+            border-radius: 18px;
+            background: var(--panel-strong);
+        }
+
+        th, td {
+            padding: 12px 10px;
+            border-bottom: 1px solid rgba(110, 162, 214, 0.18);
+            text-align: left;
+            vertical-align: top;
+            font-size: 0.93rem;
+        }
+
+        th {
+            background: #dcebff;
+            color: #1d3b63;
+        }
+
+        tr:last-child td {
+            border-bottom: 0;
+        }
+
+        .legend-list {
+            margin: 14px 0 0;
+            padding-left: 18px;
+            color: var(--muted);
+            line-height: 1.8;
+            font-size: 0.95rem;
+        }
+
+        .legend-list strong {
+            color: var(--ink);
+        }
+
+        @media (max-width: 640px) {
+            .page {
+                width: min(100% - 18px, 1200px);
+            }
+
+            .hero,
+            .card {
+                padding: 18px;
+            }
+        }
+
+        @media (max-width: 900px) {
+            .grid.loose {
+                grid-template-columns: 1fr;
+            }
+
+            .flow-head {
+                grid-template-columns: 1fr;
+            }
+
+            .flow-form {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="page">
+    <section class="hero">
+        <div class="eyebrow">Marcela's project</div>
+        <h1>Secure Access Monitoring</h1>
+        <p>
+            I wanted this project to stay simple, but still show a few real security ideas:
+            registration, password checks, account lock after repeated failures, and a protected action that is reviewed in context.
+            The app now decides on its own whether the current browser and source still look familiar for the account.
+        </p>
+
+        <div class="actions">
+            <button type="button" onclick="loadLogs()">Load logs</button>
+            <button type="button" class="soft" onclick="window.location.href='/login'">Go to sign in</button>
+        </div>
+        <div id="session-state" class="hero-session">No active session yet.</div>
+    </section>
+
+    <section class="section stack">
+        <div class="card flow-card">
+            <div class="flow-head">
+                <div class="flow-tag">Step 1<br>Register</div>
+                <div class="flow-copy">
+                    <h2>Create an account</h2>
+                    <p>I start here. The app saves the new user, hashes the password with BCrypt, and adds the first entry to the security log.</p>
+                    <div class="flow-note">
+                        I usually register one test account, sign in with the same data, and then come back to the next two sections.
+                    </div>
+                </div>
+            </div>
+            <div class="flow-form">
+                <div class="field">
+                    <label for="register-username">Username</label>
+                    <input id="register-username" value="ola">
+                </div>
+                <div class="field">
+                    <label for="register-password">Password</label>
+                    <input id="register-password" type="password" value="Secure123">
+                </div>
+                <div class="field-actions">
+                    <button type="button" class="secondary" onclick="registerUser()">Create account</button>
+                    <div id="register-status" class="status"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card flow-card">
+            <div class="flow-head">
+                <div class="flow-tag">Step 2<br>Password Check</div>
+                <div class="flow-copy">
+                    <h2>Check the current session</h2>
+                    <p>I use this part to see what happens when I confirm the password inside an active session. The app compares the current browser and source with what it already knows for this account.</p>
+                    <div class="flow-note">
+                        This step uses the account from the current session:
+                        <span id="login-account" class="inline-value">sign in first</span>.
+                        I only type the password again. The rest is detected in the background.
+                    </div>
+                </div>
+            </div>
+            <div class="flow-form">
+                <div class="field">
+                    <label for="login-password">Password</label>
+                    <input id="login-password" type="password" value="Secure123">
+                </div>
+                <div class="field">
+                    <label>Detected automatically</label>
+                    <input value="Browser, source address, failed-attempt count" disabled>
+                </div>
+                <div class="field-actions">
+                    <button type="button" class="soft" onclick="confirmCredentials()">Check password</button>
+                    <div id="login-status" class="status"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card flow-card">
+            <div class="flow-head">
+                <div class="flow-tag">Step 3<br>Protected Action</div>
+                <div class="flow-copy">
+                    <h2>Try a protected action</h2>
+                    <p>Here I pick a real action and let the app judge whether it still looks normal in the current session. The sensitivity of the action is already defined in the backend.</p>
+                    <div class="flow-note">
+                        This part also uses the current session:
+                        <span id="action-account" class="inline-value">sign in first</span>.
+                        I am not typing threat data here anymore. I only choose the action and the app fills in the rest.
+                    </div>
+                </div>
+            </div>
+            <div class="flow-form">
+                <div class="field">
+                    <label for="action-type">Action type</label>
+                    <select id="action-type">
+                        <option value="VIEW_ACTIVITY">View activity history</option>
+                        <option value="UPDATE_PROFILE">Update profile details</option>
+                        <option value="CHANGE_EMAIL">Change email address</option>
+                        <option value="CHANGE_PASSWORD">Change password</option>
+                        <option value="EXPORT_DATA">Export account data</option>
+                    </select>
+                </div>
+                <div class="field">
+                    <label>Detected automatically</label>
+                    <input value="Action sensitivity, browser history, source history" disabled>
+                </div>
+                <div class="field-actions">
+                    <button type="button" class="plain-link" onclick="evaluateAction()">Run check</button>
+                    <div id="action-status" class="status"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section grid loose">
+        <div class="card">
+            <h2>Quick checks</h2>
+            <p>I left three short cases here so I can move through the project without setting everything up by hand every time.</p>
+            <div class="scenario">
+                <div class="scenario-card">
+                    <h3>1. Same browser</h3>
+                    <p>I repeat the password check from the same browser. This is the quiet case.</p>
+                    <button type="button" class="soft" onclick="runSafeLoginScenario()">Run it</button>
+                </div>
+                <div class="scenario-card">
+                    <h3>2. Three bad passwords</h3>
+                    <p>I enter the wrong password a few times and let the lockout rule do its job.</p>
+                    <button type="button" class="danger-soft" onclick="runBruteForceScenario()">Lock account</button>
+                </div>
+                <div class="scenario-card">
+                    <h3>3. New browser context</h3>
+                    <p>I clear the browser id and ask for data export. The app should treat that combination as more suspicious.</p>
+                    <button type="button" class="outline" onclick="runSensitiveActionScenario()">Try it</button>
+                </div>
+            </div>
+            <div id="scenario-status" class="status"></div>
+        </div>
+
+        <div class="side-stack">
+            <div class="card">
+                <h2>How I read the result</h2>
+                <p>Each response comes back with a short status and a risk level. I read them like this:</p>
+                <ul class="legend-list">
+                    <li><strong>APPROVED</strong> - the request was accepted.</li>
+                    <li><strong>DENIED</strong> - the password check failed.</li>
+                    <li><strong>BLOCKED</strong> - the account was locked after repeated failures.</li>
+                    <li><strong>REVIEW_REQUIRED</strong> - the request was kept for extra review.</li>
+                </ul>
+            </div>
+
+            <section class="card">
+                <h2>Security timeline</h2>
+                <p>This table shows what the app actually saved after each step. Once I am signed in, I only see entries linked to my own account.</p>
+                <table>
+                    <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Event type</th>
+                        <th>Risk</th>
+                        <th>User</th>
+                        <th>Source</th>
+                        <th>Details</th>
+                        <th>Time</th>
+                    </tr>
+                    </thead>
+                    <tbody id="logs-body">
+                    <tr>
+                        <td colspan="7">No entries yet</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </section>
+        </div>
+    </section>
+</div>
+
+<script>
+    let csrfToken = null;
+    let currentUser = null;
+
+    function setStatus(id, message, isError = false) {
+        const element = document.getElementById(id);
+        element.textContent = message;
+        element.className = isError ? "status error" : "status";
+    }
+
+    async function readTextSafe(response) {
+        const text = await response.text();
+        return text || "No response from the server";
+    }
+
+    async function readErrorMessage(response, fallbackMessage) {
+        if (response.status === 401) {
+            return "Sign in first to continue.";
+        }
+        const contentType = response.headers.get("content-type") || "";
+        if (contentType.includes("application/json")) {
+            const data = await response.json().catch(() => null);
+            return data?.message || data?.error || fallbackMessage;
+        }
+
+        if (response.status === 403) {
+            return "The action was blocked. Refresh the page and try again after signing in.";
+        }
+
+        const text = await readTextSafe(response);
+        return text || fallbackMessage;
+    }
+
+    async function ensureCsrfToken() {
+        if (csrfToken) {
+            return csrfToken;
+        }
+
+        const response = await fetch("/csrf", {
+            credentials: "same-origin"
+        });
+
+        if (!response.ok) {
+            throw new Error(await readErrorMessage(response, "Could not prepare the request."));
+        }
+
+        csrfToken = await response.json();
+        return csrfToken;
+    }
+
+    async function buildPostOptions(body, contentType = "application/json") {
+        const token = await ensureCsrfToken();
+        const headers = {
+            [token.headerName]: token.token
+        };
+
+        if (contentType) {
+            headers["Content-Type"] = contentType;
+        }
+
+        return {
+            method: "POST",
+            credentials: "same-origin",
+            headers,
+            body
+        };
+    }
+
+    function setCurrentUser(user, message = null) {
+        currentUser = user;
+        const sessionState = document.getElementById("session-state");
+        const loginAccount = document.getElementById("login-account");
+        const actionAccount = document.getElementById("action-account");
+
+        if (user) {
+            sessionState.textContent = `Signed in as ${user.username}.`;
+            loginAccount.textContent = user.username;
+            actionAccount.textContent = user.username;
+            return;
+        }
+
+        sessionState.textContent = message || "No active session yet.";
+        loginAccount.textContent = message ? "session unavailable" : "sign in first";
+        actionAccount.textContent = message ? "session unavailable" : "sign in first";
+    }
+
+    async function loadCurrentUser() {
+        try {
+            const response = await fetch("/users/me", {
+                credentials: "same-origin"
+            });
+
+            if (response.status === 401) {
+                setCurrentUser(null);
+                return;
+            }
+
+            if (response.status === 403) {
+                setCurrentUser(null, await readErrorMessage(response, "This account is not available right now."));
+                return;
+            }
+
+            if (!response.ok) {
+                throw new Error("Could not read the current session.");
+            }
+
+            const data = await response.json();
+            setCurrentUser(data);
+        } catch (error) {
+            setCurrentUser(null, "The current session could not be loaded.");
+        }
+    }
+
+    async function registerUser() {
+        const username = document.getElementById("register-username").value;
+        const password = document.getElementById("register-password").value;
+
+        try {
+            const response = await fetch(
+                "/users/register",
+                await buildPostOptions(JSON.stringify({
+                    username,
+                    password
+                }))
+            );
+            if (!response.ok) {
+                throw new Error(await readErrorMessage(response, "Registration failed."));
+            }
+            document.getElementById("login-password").value = password;
+            setStatus("register-status", "Account created. You can sign in with the same details.");
+        } catch (error) {
+            setStatus("register-status", error.message || "Registration failed.", true);
+        }
+    }
+
+    async function confirmCredentialsWithPayload(payload) {
+        const response = await fetch(
+            "/review/confirmation",
+            await buildPostOptions(JSON.stringify(payload))
+        );
+
+        if (!response.ok) {
+            throw new Error(await readErrorMessage(response, "Password check failed."));
+        }
+        return response.json();
+    }
+
+    async function evaluateActionWithPayload(payload) {
+        const response = await fetch(
+            "/review/action",
+            await buildPostOptions(JSON.stringify(payload))
+        );
+
+        if (!response.ok) {
+            throw new Error(await readErrorMessage(response, "Action review failed."));
+        }
+        return response.json();
+    }
+
+    function formatDecision(data) {
+        const reasons = Array.isArray(data.reasons) && data.reasons.length
+            ? ` Notes: ${data.reasons.join(", ")}.`
+            : "";
+        return `${data.status} - ${data.riskLevel}. ${data.message}.${reasons}`;
+    }
+
+    function formatEventType(eventType) {
+        const labels = {
+            USER_REGISTERED: "Account created",
+            LOGIN_SUCCESS: "Password confirmed",
+            LOGIN_FAILED: "Password rejected",
+            USER_BLOCKED: "Account locked",
+            PROTECTED_ACTION_FLAGGED: "Action sent to review",
+            PROTECTED_ACTION_APPROVED: "Action approved"
+        };
+
+        return labels[eventType] || eventType || "";
+    }
+
+    function escapeHtml(value) {
+        return String(value ?? "")
+            .replaceAll("&", "&amp;")
+            .replaceAll("<", "&lt;")
+            .replaceAll(">", "&gt;")
+            .replaceAll('"', "&quot;")
+            .replaceAll("'", "&#39;");
+    }
+
+    function clearDeviceFingerprint() {
+        document.cookie = "sam-device-id=; Max-Age=0; path=/";
+    }
+
+    async function confirmCredentials() {
+        if (!currentUser) {
+            setStatus("login-status", "Sign in first to use this step.", true);
+            return;
+        }
+
+        const payload = {
+            password: document.getElementById("login-password").value
+        };
+
+        try {
+            const data = await confirmCredentialsWithPayload(payload);
+            setStatus("login-status", formatDecision(data));
+            await loadLogs();
+        } catch (error) {
+            setStatus("login-status", error.message || "Password check failed.", true);
+        }
+    }
+
+    async function evaluateAction() {
+        if (!currentUser) {
+            setStatus("action-status", "Sign in first to use this step.", true);
+            return;
+        }
+
+        const payload = {
+            actionType: document.getElementById("action-type").value
+        };
+
+        try {
+            const data = await evaluateActionWithPayload(payload);
+            setStatus("action-status", formatDecision(data));
+            await loadLogs();
+        } catch (error) {
+            setStatus("action-status", error.message || "Action review failed.", true);
+        }
+    }
+
+    async function loadLogs() {
+        const body = document.getElementById("logs-body");
+        try {
+            const response = await fetch("/users/logs", {
+                credentials: "same-origin"
+            });
+
+        if (response.status === 401) {
+            setCurrentUser(null);
+            body.innerHTML = '<tr><td colspan="7">Sign in to see the entries for your account.</td></tr>';
+            return;
+        }
+
+        if (response.status === 403) {
+            const message = await readErrorMessage(response, "Access denied.");
+            setCurrentUser(null, message);
+            body.innerHTML = `<tr><td colspan="7">${escapeHtml(message)}</td></tr>`;
+            return;
+        }
+
+            if (response.redirected || response.url.includes("/login")) {
+                body.innerHTML = '<tr><td colspan="7">Sign in to see the entries for your account.</td></tr>';
+                return;
+            }
+
+            if (!response.ok) {
+                throw new Error("Could not load logs.");
+            }
+
+            const contentType = response.headers.get("content-type") || "";
+            if (!contentType.includes("application/json")) {
+                body.innerHTML = '<tr><td colspan="7">Sign in to see the entries for your account.</td></tr>';
+                return;
+            }
+
+            const logs = await response.json();
+            if (!logs.length) {
+                body.innerHTML = '<tr><td colspan="7">No entries yet</td></tr>';
+                return;
+            }
+
+            body.innerHTML = logs.map(log => `
+                <tr>
+                    <td>${escapeHtml(log.id ?? "")}</td>
+                    <td>${escapeHtml(formatEventType(log.eventType))}</td>
+                    <td>${escapeHtml(log.riskLevel ?? "")}</td>
+                    <td>${escapeHtml(log.username ?? "")}</td>
+                    <td>${escapeHtml(log.source ?? "")}</td>
+                    <td>${escapeHtml(log.details ?? "")}</td>
+                    <td>${escapeHtml(log.createdAt ?? "")}</td>
+                </tr>
+            `).join("");
+        } catch (error) {
+            body.innerHTML = `<tr><td colspan="7">${escapeHtml(error.message)}</td></tr>`;
+        }
+    }
+
+    async function runSafeLoginScenario() {
+        try {
+            if (!currentUser) {
+                throw new Error("Sign in first to use this step.");
+            }
+
+            const password = document.getElementById("login-password").value;
+
+            const data = await confirmCredentialsWithPayload({
+                password
+            });
+            setStatus("scenario-status", `Same-browser check finished: ${data.status} / ${data.riskLevel}.`);
+            setStatus("login-status", formatDecision(data));
+            await loadLogs();
+        } catch (error) {
+            setStatus("scenario-status", error.message || "Check failed.", true);
+        }
+    }
+
+    async function runBruteForceScenario() {
+        try {
+            if (!currentUser) {
+                throw new Error("Sign in first to use this step.");
+            }
+
+            document.getElementById("login-password").value = "wrongpassword";
+
+            let finalData = null;
+            for (let i = 0; i < 3; i += 1) {
+                finalData = await confirmCredentialsWithPayload({
+                    password: "wrongpassword"
+                });
+            }
+
+            setStatus("scenario-status", `Lockout check finished: ${finalData.status} / ${finalData.riskLevel}.`);
+            setStatus("login-status", formatDecision(finalData));
+            await loadLogs();
+        } catch (error) {
+            setStatus("scenario-status", error.message || "Check failed.", true);
+        }
+    }
+
+    async function runSensitiveActionScenario() {
+        try {
+            document.getElementById("action-type").value = "EXPORT_DATA";
+            clearDeviceFingerprint();
+
+            if (!currentUser) {
+                throw new Error("Sign in first to use this step.");
+            }
+
+            const data = await evaluateActionWithPayload({
+                actionType: "EXPORT_DATA"
+            });
+
+            setStatus("scenario-status", `Protected-action check finished: ${data.status} / ${data.riskLevel}.`);
+            setStatus("action-status", formatDecision(data));
+            await loadLogs();
+        } catch (error) {
+            setStatus("scenario-status", error.message || "Check failed.", true);
+        }
+    }
+
+    ensureCsrfToken().catch(() => null);
+    loadCurrentUser();
+    loadLogs();
+</script>
+</body>
+</html>

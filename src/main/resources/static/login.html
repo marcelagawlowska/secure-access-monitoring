@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign in | Marcela's project</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap');
+
+        :root {
+            --bg: #1e3a5f;
+            --bg-deep: #274b78;
+            --panel: rgba(255, 255, 255, 0.92);
+            --ink: #10233d;
+            --muted: #557392;
+            --line: rgba(110, 162, 214, 0.3);
+            --accent: #1d6fd7;
+            --accent-strong: #1359b4;
+            --danger: #b92e54;
+            --success: #117a65;
+            --shadow: 0 20px 60px rgba(31, 85, 150, 0.14);
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            display: grid;
+            place-items: center;
+            padding: 24px;
+            font-family: "Manrope", "Segoe UI", sans-serif;
+            color: var(--ink);
+            background:
+                radial-gradient(circle at 16% 14%, rgba(163, 208, 255, 0.18), transparent 18%),
+                radial-gradient(circle at 80% 20%, rgba(118, 177, 255, 0.14), transparent 16%),
+                radial-gradient(circle at 70% 78%, rgba(71, 129, 214, 0.18), transparent 20%),
+                linear-gradient(145deg, #17304e, #20446d 44%, #2b5a8b);
+        }
+
+        .shell {
+            width: min(980px, 100%);
+            display: grid;
+            grid-template-columns: 1.1fr 0.9fr;
+            gap: 20px;
+            align-items: stretch;
+        }
+
+        .panel {
+            border-radius: 28px;
+            border: 1px solid var(--line);
+            background: var(--panel);
+            box-shadow: var(--shadow);
+        }
+
+        .intro {
+            padding: 32px;
+            background: linear-gradient(145deg, rgba(255, 255, 255, 0.96), rgba(228, 241, 255, 0.9));
+        }
+
+        .eyebrow {
+            display: inline-flex;
+            align-items: center;
+            padding: 8px 14px;
+            border-radius: 999px;
+            background: rgba(29, 111, 215, 0.1);
+            color: var(--accent-strong);
+            font-size: 0.9rem;
+            font-weight: 700;
+            letter-spacing: 0.02em;
+            text-transform: uppercase;
+        }
+
+        h1 {
+            margin: 18px 0 10px;
+            font-size: clamp(2rem, 4vw, 3rem);
+            line-height: 1;
+        }
+
+        p {
+            margin: 0;
+            color: var(--muted);
+            line-height: 1.7;
+        }
+
+        .notes {
+            margin-top: 18px;
+            display: grid;
+            gap: 12px;
+        }
+
+        .note {
+            padding: 14px 16px;
+            border-radius: 18px;
+            background: rgba(29, 111, 215, 0.08);
+            color: #31557f;
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
+        .form-card {
+            padding: 28px;
+        }
+
+        h2 {
+            margin: 0 0 8px;
+            font-size: 1.35rem;
+        }
+
+        form {
+            margin-top: 22px;
+        }
+
+        label {
+            display: block;
+            margin: 14px 0 6px;
+            font-size: 0.92rem;
+            font-weight: 700;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px 13px;
+            border-radius: 14px;
+            border: 1px solid rgba(110, 162, 214, 0.45);
+            background: rgba(255, 255, 255, 0.96);
+            color: var(--ink);
+            font: inherit;
+            outline: none;
+        }
+
+        input:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 4px rgba(29, 111, 215, 0.12);
+        }
+
+        button {
+            width: 100%;
+            margin-top: 18px;
+            padding: 13px 16px;
+            border: 0;
+            border-radius: 14px;
+            background: linear-gradient(135deg, var(--accent), var(--accent-strong));
+            color: white;
+            font: inherit;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0 12px 24px rgba(29, 111, 215, 0.24);
+        }
+
+        button:disabled {
+            opacity: 0.7;
+            cursor: wait;
+        }
+
+        .message {
+            margin-top: 14px;
+            padding: 12px 14px;
+            border-radius: 14px;
+            font-size: 0.94rem;
+            line-height: 1.5;
+        }
+
+        .message.error {
+            background: rgba(185, 46, 84, 0.1);
+            color: var(--danger);
+        }
+
+        .message.success {
+            background: rgba(17, 122, 101, 0.1);
+            color: var(--success);
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-top: 16px;
+            color: #325b8b;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 860px) {
+            .shell {
+                grid-template-columns: 1fr;
+            }
+
+            .intro,
+            .form-card {
+                padding: 22px;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="shell">
+    <section class="panel intro">
+        <div class="eyebrow">Marcela's project</div>
+        <h1>Sign in to continue</h1>
+        <p>
+            This page opens the protected part of the app. After I sign in with the same account that I registered,
+            I can go back to the main page and check the log, the password check, and the protected action step.
+        </p>
+
+        <div class="notes">
+            <div class="note">
+                If the account is new, I create it on the main page first and then come back here with the same username and password.
+            </div>
+            <div class="note">
+                After a successful sign-in the app remembers the browser and source, so later checks can compare the current session with something real.
+            </div>
+        </div>
+    </section>
+
+    <section class="panel form-card">
+        <h2>Sign in</h2>
+        <p>Use the same credentials that were created during registration.</p>
+
+        <form id="login-form" method="post" action="/login">
+            <input id="csrf-field" type="hidden">
+
+            <label for="username">Username</label>
+            <input id="username" name="username" autocomplete="username" required>
+
+            <label for="password">Password</label>
+            <input id="password" name="password" type="password" autocomplete="current-password" required>
+
+            <button id="sign-in-button" type="submit">Sign in</button>
+        </form>
+
+        <div id="login-error" class="message error" hidden>
+            The username or password was not accepted. Try again with the same data used during registration.
+        </div>
+        <div id="blocked-info" class="message error" hidden>
+            This account is currently blocked. Use another account or create a new one.
+        </div>
+        <div id="csrf-error" class="message error" hidden>
+            The sign-in form could not be prepared. Refresh the page and try again.
+        </div>
+        <div id="logout-info" class="message success" hidden>
+            You have been signed out successfully.
+        </div>
+
+        <a class="back-link" href="/">Back to the main page</a>
+    </section>
+</div>
+
+<script>
+    const params = new URLSearchParams(window.location.search);
+    const loginForm = document.getElementById("login-form");
+    const csrfField = document.getElementById("csrf-field");
+    const signInButton = document.getElementById("sign-in-button");
+    const csrfError = document.getElementById("csrf-error");
+    let resubmitting = false;
+
+    if (params.has("error")) {
+        document.getElementById("login-error").hidden = false;
+    }
+
+    if (params.has("blocked")) {
+        document.getElementById("blocked-info").hidden = false;
+    }
+
+    if (params.has("logout")) {
+        document.getElementById("logout-info").hidden = false;
+    }
+
+    async function ensureCsrfField() {
+        if (csrfField.value) {
+            return;
+        }
+
+        signInButton.disabled = true;
+        csrfError.hidden = true;
+
+        try {
+            const response = await fetch("/csrf", {
+                credentials: "same-origin"
+            });
+
+            if (!response.ok) {
+                throw new Error("Could not load CSRF token.");
+            }
+
+            const token = await response.json();
+            csrfField.name = token.parameterName;
+            csrfField.value = token.token;
+        } catch (error) {
+            csrfError.hidden = false;
+            throw error;
+        } finally {
+            signInButton.disabled = false;
+        }
+    }
+
+    loginForm.addEventListener("submit", async (event) => {
+        if (resubmitting || csrfField.value) {
+            return;
+        }
+
+        event.preventDefault();
+
+        try {
+            await ensureCsrfField();
+            resubmitting = true;
+            loginForm.requestSubmit();
+        } finally {
+            resubmitting = false;
+        }
+    });
+
+    ensureCsrfField().catch(() => null);
+</script>
+</body>
+</html>
