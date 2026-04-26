@@ -3,9 +3,12 @@ package banksecurity.security;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
+import org.springframework.security.web.header.writers.ReferrerPolicyHeaderWriter;
 import org.springframework.security.web.context.SecurityContextHolderFilter;
 import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
@@ -36,22 +39,40 @@ public class SecurityConfig {
                 new AntPathRequestMatcher("/csrf")
         );
 
+        CookieCsrfTokenRepository csrfTokenRepository = CookieCsrfTokenRepository.withHttpOnlyFalse();
+        csrfTokenRepository.setHeaderName("X-XSRF-TOKEN");
+        csrfTokenRepository.setParameterName("_csrf");
+        csrfTokenRepository.setCookieCustomizer(cookie -> cookie
+                .sameSite("Strict")
+                .path("/")
+        );
+
         http
                 .csrf(csrf -> csrf
-                        .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
+                        .csrfTokenRepository(csrfTokenRepository)
+                )
+                .headers(headers -> headers
+                        .contentSecurityPolicy(csp -> csp.policyDirectives(
+                                "default-src 'self'; " +
+                                        "script-src 'self' 'unsafe-inline'; " +
+                                        "style-src 'self' 'unsafe-inline'; " +
+                                        "img-src 'self' data:; " +
+                                        "connect-src 'self'; " +
+                                        "frame-ancestors 'none'; " +
+                                        "base-uri 'self'; " +
+                                        "form-action 'self'"
+                        ))
+                        .frameOptions(HeadersConfigurer.FrameOptionsConfig::deny)
+                        .referrerPolicy(referrer -> referrer
+                                .policy(ReferrerPolicyHeaderWriter.ReferrerPolicy.SAME_ORIGIN))
+                        .permissionsPolicy(permissions -> permissions
+                                .policy("camera=(), microphone=(), geolocation=(), payment=()"))
                 )
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/", "/index.html").permitAll()
-                        .requestMatchers("/login.html").permitAll()
-                        .requestMatchers("/error").permitAll()
-                        .requestMatchers("/csrf").permitAll()
-                        .requestMatchers("/login").permitAll()
-                        .requestMatchers("/users/register").permitAll()
-                        .requestMatchers("/actuator/health").permitAll()
-                        .requestMatchers("/review/confirmation").authenticated()
-                        .requestMatchers("/review/action").authenticated()
-                        .requestMatchers("/users/me").authenticated()
-                        .requestMatchers("/users/logs").authenticated()
+                        .requestMatchers(HttpMethod.GET, "/", "/index.html", "/login", "/login.html", "/csrf", "/actuator/health").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/login", "/users/register").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/review/confirmation", "/review/action").authenticated()
+                        .requestMatchers(HttpMethod.GET, "/users/me", "/users/logs").authenticated()
                         .anyRequest().denyAll()
                 )
                 .formLogin(form -> form
@@ -59,7 +80,16 @@ public class SecurityConfig {
                         .successHandler(formLoginSuccessHandler)
                         .failureHandler(formLoginFailureHandler)
                 )
-                .logout(logout -> logout.logoutSuccessUrl("/").permitAll())
+                .logout(logout -> logout
+                        .logoutUrl("/logout")
+                        .invalidateHttpSession(true)
+                        .clearAuthentication(true)
+                        .deleteCookies("JSESSIONID")
+                        .logoutSuccessUrl("/")
+                        .permitAll())
+                .sessionManagement(session -> session
+                        .sessionFixation(sessionFixation -> sessionFixation.migrateSession())
+                        .maximumSessions(1))
                 .httpBasic(AbstractHttpConfigurer::disable)
                 .addFilterAfter(blockedAccountFilter, SecurityContextHolderFilter.class)
                 .exceptionHandling(exception -> exception

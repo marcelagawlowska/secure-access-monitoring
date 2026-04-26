@@ -13,6 +13,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
+import static org.hamcrest.Matchers.anyOf;
+import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.startsWith;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
@@ -60,6 +63,46 @@ class SecurityWebFlowTests {
                 .andExpect(jsonPath("$.role").value("USER"))
                 .andExpect(jsonPath("$.password").doesNotExist())
                 .andExpect(jsonPath("$.blocked").doesNotExist());
+    }
+
+    @Test
+    void stateChangingEndpointsShouldRequireCsrfToken() throws Exception {
+        mockMvc.perform(post("/users/register")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                                {
+                                  "username": "anna",
+                                  "password": "Secure123"
+                                }
+                                """))
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
+    void publicPagesShouldSendSecurityHeaders() throws Exception {
+        mockMvc.perform(get("/"))
+                .andExpect(status().isOk())
+                .andExpect(header().string("Content-Security-Policy", containsString("default-src 'self'")))
+                .andExpect(header().string("Content-Security-Policy", containsString("frame-ancestors 'none'")))
+                .andExpect(header().string("X-Frame-Options", "DENY"))
+                .andExpect(header().string("X-Content-Type-Options", "nosniff"))
+                .andExpect(header().string("Referrer-Policy", "same-origin"))
+                .andExpect(header().string("Permissions-Policy", "camera=(), microphone=(), geolocation=(), payment=()"));
+    }
+
+    @Test
+    void csrfEndpointShouldReturnTokenMetadata() throws Exception {
+        mockMvc.perform(get("/csrf"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.parameterName").value("_csrf"))
+                .andExpect(jsonPath("$.headerName").value(anyOf(equalTo("X-XSRF-TOKEN"), equalTo("X-CSRF-TOKEN"))))
+                .andExpect(jsonPath("$.token").isNotEmpty());
+    }
+
+    @Test
+    void unsupportedPublicMethodsShouldBeDenied() throws Exception {
+        mockMvc.perform(get("/users/register"))
+                .andExpect(status().isUnauthorized());
     }
 
     @Test
